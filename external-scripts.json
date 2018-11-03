@@ -1,10 +1,13 @@
 [
   "hubot-diagnostics",
+  "hubot-redis-brain",
   "hubot-help",
   "hubot-google-images",
   "hubot-google-translate",
   "hubot-pugme",
   "hubot-maps",
   "hubot-rules",
-  "hubot-shipit"
+  "hubot-shipit",
+  "@mrmakeit/hubot-cron-auth",
+  "hubot-auth"
 ]
