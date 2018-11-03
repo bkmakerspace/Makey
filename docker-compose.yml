@@ -3,5 +3,7 @@ services:
   hubot:
     build: .
     env_file: .env
+    restart: unless-stopped
   redis:
     image: "redis:alpine"
+    restart: unless-stopped
