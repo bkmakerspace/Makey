@@ -18,7 +18,7 @@ COPY package.json package.json
 RUN npm install
 
 ADD scripts /hubot/
-
+ADD hubot-scripts.json /hubot/
 ADD external-scripts.json /hubot/
 
 EXPOSE 80
