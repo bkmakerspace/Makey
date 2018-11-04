@@ -10,8 +10,10 @@
 
 module.exports = (robot) ->
 
-  # robot.hear /badger/i, (res) ->
-  #   res.send "Badgers? BADGERS? WE DON'T NEED NO STINKIN BADGERS"
+  robot.hear /badger/i, (res) ->
+    res.send "Badgers? BADGERS? WE DON'T NEED NO STINKIN BADGERS"
+  robot.respond /toolhub/i, (res) ->
+    res.reply "You can access tool hub at http://server1.localdomain:8001"
   #
   # robot.respond /open the (.*) doors/i, (res) ->
   #   doorType = res.match[1]
