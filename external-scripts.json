@@ -8,6 +8,5 @@
   "hubot-maps",
   "hubot-rules",
   "hubot-shipit",
-  "@mrmakeit/hubot-cron-auth",
   "hubot-auth"
 ]
