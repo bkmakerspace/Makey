@@ -4,7 +4,7 @@ module.exports = (robot) => {
   class DoorAccess {
     userWithBadge(badgeId) {
       for(var key in robot.brain.data.users) {
-        if(hasBadge(user, badgeId)) {
+        if(this.hasBadge(user, badgeId)) {
           return user;
         }
       }
