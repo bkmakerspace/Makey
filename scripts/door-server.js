@@ -3,7 +3,7 @@ module.exports = (robot) => {
 
   class DoorAccess {
     userWithBadge(badgeId) {
-      for(key in robot.brain.data.users) {
+      for(var key in robot.brain.data.users) {
         if(hasBadge(user, badgeId)) {
           return user;
         }
@@ -14,7 +14,7 @@ module.exports = (robot) => {
     hasBadge(user, badgeId) {
       const userBadges = this.userBadges(badgeId)
       if(userBadges) {
-        for(badgeK in userBadges)
+        for(var badgeK in userBadges)
         {
           if(userBadges[badgeK] == badgeId)
             return true;
