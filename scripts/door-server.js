@@ -1,18 +1,19 @@
-
 module.exports = (robot) => {
 
   class DoorAccess {
     userWithBadge(badgeId) {
+      let door = this
       for(var key in robot.brain.data.users) {
-        if(this.hasBadge(user, badgeId)) {
-          return user;
+        if(door.hasBadge(robot.brain.data.users[key], badgeId)) {
+          return key;
         }
       }
       return null;
     }
 
     hasBadge(user, badgeId) {
-      const userBadges = this.userBadges(badgeId)
+      let door = this
+      const userBadges = door.userBadges(user)
       if(userBadges) {
         for(var badgeK in userBadges)
         {
@@ -24,7 +25,8 @@ module.exports = (robot) => {
     }
 
     userBadges(user) {
-      userBadges = []
+      let door = this
+      let userBadges = []
       if(user.badges) {
         userBadges = userBadges.concat(user.badges);
       }
@@ -76,20 +78,22 @@ module.exports = (robot) => {
 
   robot.router.get('/door/:badgeId', (req, res) => {
     const user = robot.doorAccess.userWithBadge(req.params.badgeId);
+    const badgeId = req.params.badgeId
 
     if(user && badgeId) {
       console.log("badge valid!")
-      res.send(`${user.real_name}\nWELCOME!`);
+      const theUser = robot.brain.userForId(user);
+      res.send(`${theUser.real_name}\nWELCOME!`);
       return;
     } else if (robot.brain.get("newBadgeUser") && badgeId) {
       const userToAdd = robot.brain.userForId(robot.brain.get("newBadgeUser"));
       robot.brain.set("newBadgeUser", null);
       userToAdd.badges = userToAdd.badges || [];
       userToAdd.badges.push(req.params.badgeId);
-      res.send(`${user.real_name}\nBADGE ADDED!`);
+      res.send(`${userToAdd.real_name}\nBADGE ADDED!`);
       return;
     } else {
-      const msg = "badge " +req.params.badgeId+ " not found!";
+      const msg = "badge " +badgeId+ " not found!";
       console.log("failure:", msg);
       res.status(401);
       res.send(msg);
