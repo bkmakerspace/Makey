@@ -16,6 +16,29 @@ module.exports = (robot) ->
     res.send "Badgers? BADGERS? WE DON'T NEED NO STINKIN BADGERS"
   robot.respond /toolhub/i, (res) ->
     res.reply "You can access tool hub at http://server1.localdomain:8001"
+  robot.hear //i, (res) ->
+    if not process.env.HUBOT_DISPLAY_CHANNEL
+      return
+    if not process.env.HUBOT_DISPLAY_ADDRESS
+      return
+    room = robot.adapter.client.rtm.dataStore.getChannelGroupOrDMById res.message.room
+    if not room.is_channel
+      return
+    console.log(room.name)
+    if room.name != process.env.HUBOT_DISPLAY_CHANNEL
+      return
+    user = res.message.user.name
+    console.log(user)
+    message = res.message.text
+    console.log(message)
+    data = JSON.stringify({
+      name: user,
+      chat: message
+    })
+    robot.http("http://"+process.env.HUBOT_DISPLAY_ADDRESS+"/chat")
+      .post(data) (err, response, body) ->
+        console.log err
+        console.log response
   #
   # robot.respond /open the (.*) doors/i, (res) ->
   #   doorType = res.match[1]
