@@ -95,10 +95,10 @@ module.exports = (robot) => {
       console.log("badge valid!")
       const theUser = robot.brain.userForId(user);
       res.send(`${theUser.real_name}\nWELCOME!`);
-      robot.emit "doorUnlock", {
+      robot.emit("doorUnlock", {
         'user': theUser,
         'badgeId': badgeId
-      }
+      })
       return;
     } else if (robot.brain.get("newBadgeUser") && badgeId) {
       const userToAdd = robot.brain.userForId(robot.brain.get("newBadgeUser"));
