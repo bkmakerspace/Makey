@@ -1,3 +1,14 @@
+# Description:
+#   Door controller for the Makerspace
+# Commands:
+#   hubot add badge to <user> - Add a badge to allow <user> to enter the space
+#   hubot remove badges from <user> - Remove all existing badges for <user>
+# Notes:
+#   Adding and removing badges requires the 'door-admin' permission
+#   from hubot-admin.  Adding badges will use the door sensor to get the badge
+#   id.
+# Author:
+#   pipakin
 module.exports = (robot) => {
 
   class DoorAccess {
@@ -84,6 +95,10 @@ module.exports = (robot) => {
       console.log("badge valid!")
       const theUser = robot.brain.userForId(user);
       res.send(`${theUser.real_name}\nWELCOME!`);
+      robot.emit "doorUnlock", {
+        'user': theUser,
+        'badgeId': badgeId
+      }
       return;
     } else if (robot.brain.get("newBadgeUser") && badgeId) {
       const userToAdd = robot.brain.userForId(robot.brain.get("newBadgeUser"));
