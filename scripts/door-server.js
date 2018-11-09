@@ -1,14 +1,14 @@
-# Description:
-#   Door controller for the Makerspace
-# Commands:
-#   hubot add badge to <user> - Add a badge to allow <user> to enter the space
-#   hubot remove badges from <user> - Remove all existing badges for <user>
-# Notes:
-#   Adding and removing badges requires the 'door-admin' permission
-#   from hubot-admin.  Adding badges will use the door sensor to get the badge
-#   id.
-# Author:
-#   pipakin
+// Description:
+//   Door controller for the Makerspace
+// Commands:
+//   hubot add badge to <user> - Add a badge to allow <user> to enter the space
+//   hubot remove badges from <user> - Remove all existing badges for <user>
+// Notes:
+//   Adding and removing badges requires the 'door-admin' permission
+//   from hubot-admin.  Adding badges will use the door sensor to get the badge
+//   id.
+// Author:
+//   pipakin
 module.exports = (robot) => {
 
   class DoorAccess {
