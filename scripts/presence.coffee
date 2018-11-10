@@ -6,6 +6,9 @@
 uuid = require('uuid/v4')
 Unifi = require('ubnt-unifi')
 
+presenceNotificationDelay = 2*60*60*1000
+#presenceNotificationDelay = 60*1000
+
 module.exports = (robot) ->
   class Presence
     userWithMAC:(mac) ->
@@ -48,12 +51,18 @@ module.exports = (robot) ->
     console.log(user)
     if robot.brain.data.users[user].presence.enabled
       name = robot.brain.userForId(user).real_name
-      robot.messageRoom "#"+process.env.HUBOT_PRESENCE_ROOM, name + " is at the space now!"
+      if data.time >= robot.brain.data.users[user].presence.lastEntry + presenceNotificationDelay
+        robot.messageRoom "#"+process.env.HUBOT_PRESENCE_ROOM, name + " is at the space now!"
+      else
+        console.log "delayed due to timeout"
+      robot.brain.data.users[user].presence.lastEntry = data.time
 
   robot.unifi.on 'wu.disconnected', (data) ->
     console.log(this.event, data)
     user = robot.presence.userWithMAC data.user
     console.log(user)
+    if robot.brain.data.users[user].presence.enabled
+      robot.brain.data.users[user].presence.lastEntry = data.time
 
   robot.respond /setup presence/i, (res) ->
     user = robot.brain.userForName res.envelope.user.name
