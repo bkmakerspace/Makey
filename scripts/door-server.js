@@ -127,7 +127,7 @@ module.exports = (robot) => {
       }
       res.send(`${userObject.real_name}\nBADGE UPDATED!`);
       robot.emit("doorUnlock", {
-        'user': user,
+        'user': userObject,
         'badgeId': req.text
       })
       return;
@@ -135,7 +135,7 @@ module.exports = (robot) => {
       const userObject = robot.brain.userForId(secureUser)
       res.send(`${userObject.real_name}\nWELCOME!`);
       robot.emit("doorUnlock", {
-        'user': secureUser,
+        'user': userObject,
         'badgeId': req.text
       })
       return;
@@ -145,6 +145,10 @@ module.exports = (robot) => {
       userToAdd.badges = userToAdd.badges || [];
       userToAdd.badges.push(req.text);
       res.send(`${userToAdd.real_name}\nBADGE ADDED!`);
+      robot.emit("doorUnlock", {
+        'user': userToAdd,
+        'badgeId': req.text
+      })
       return;
     } else {
       const msg = "badge " +req.params.badgeId+ "/" + req.text + " not found!";
