@@ -3,6 +3,8 @@
 #
 # Commands:
 #   hubot setup presence - Add new device to users presence list
+#   hubot who's at the space - Get users currently at the space. (PM or Members channel only)
+#   hubot enable|disable presence - Turn on or off your presence notifications
 uuid = require('uuid/v4')
 Unifi = require('ubnt-unifi')
 
@@ -132,7 +134,7 @@ module.exports = (robot) ->
             userObj = robot.brain.data.users[user]
             robot.brain.data.users[user].presence.devices.push(mac)
             response.send('Added '+mac)
-            robot.brain.data.users[user].presence.userToken = ""
+            robot.brain.data.users[user].presence.accessToken = ""
     console.log user
 
   robot.router.get "/hubot/presence/delDevice", (request, response) ->
@@ -149,5 +151,5 @@ module.exports = (robot) ->
             if index >= 0
               userObj.presence.devices.splice(index,1)
             response.send('Removed '+mac)
-            robot.brain.data.users[user].presence.userToken = ""
+            robot.brain.data.users[user].presence.accessToken = ""
     console.log user
