@@ -9,6 +9,7 @@
 //   id.
 // Author:
 //   pipakin
+const crypto = require('crypto')
 module.exports = (robot) => {
 
   class DoorAccess {
@@ -87,39 +88,66 @@ module.exports = (robot) => {
     user.badges = [];
   });
 
-  robot.router.post('/door/:badgeId', (req, res) => {
+  robot.router.get('/hubot/randomBytes', (req,res) => {
+    crypto.randomBytes(16,(err,buf) => {
+      if(err){
+        res.status(400)
+      }else{
+        res.send(buf)
+      }
+    })
+  })
+
+  bodyText=function(req, res, next){
+  if (req.is('text/*')) {
+    req.text = '';
+    req.setEncoding('utf8');
+    req.on('data', function(chunk){ req.text += chunk });
+    req.on('end', next);
+  } else {
+    next();
+  }
+  }
+  robot.router.post('/door/:badgeId', bodyText, (req, res) => {
+    console.log('new badge check')
+    console.log(req.text)
     const user = robot.doorAccess.userWithBadge(req.params.badgeId);
-    const secureUser = robot.doorAccess.userWithBadge(req.body);
+    console.log(user)
+    const secureUser = robot.doorAccess.userWithBadge(req.text);
+    console.log(secureUser)
+    const badgeId = req.params.badgeId;
 
     if(user && badgeId) {
+      const userObject = robot.brain.userForId(user)
       console.log("old style entry!");
-      user.badges = user.badges.filter(x => x != badgeId);
+      userObject.badges = userObject.badges.filter(x => x != badgeId);
       if(!secureUser) {
         console.log("created new user.");
-        user.badges.push(req.body);
+        userObject.badges.push(req.text);
       }
-      res.send(`${user.real_name}\nBADGE UPDATED!`);
+      res.send(`${userObject.real_name}\nBADGE UPDATED!`);
       robot.emit("doorUnlock", {
         'user': user,
-        'badgeId': badgeId
+        'badgeId': req.text
       })
       return;
-    } else if(secureUser && req.body) {
-      res.send(`${user.real_name}\nWELCOME!`);
+    } else if(secureUser && req.text) {
+      const userObject = robot.brain.userForId(secureUser)
+      res.send(`${userObject.real_name}\nWELCOME!`);
       robot.emit("doorUnlock", {
         'user': secureUser,
-        'badgeId': badgeId
+        'badgeId': req.text
       })
       return;
     } else if (robot.brain.get("newBadgeUser") && badgeId) {
       const userToAdd = robot.brain.userForId(robot.brain.get("newBadgeUser"));
       robot.brain.set("newBadgeUser", null);
       userToAdd.badges = userToAdd.badges || [];
-      userToAdd.badges.push(req.body);
-      res.send(`${user.real_name}\nBADGE ADDED!`);
+      userToAdd.badges.push(req.text);
+      res.send(`${userToAdd.real_name}\nBADGE ADDED!`);
       return;
     } else {
-      const msg = "badge " +req.params.badgeId+ "/" + req.body + " not found!";
+      const msg = "badge " +req.params.badgeId+ "/" + req.text + " not found!";
       console.log("failure:", msg);
       res.status(401);
       res.send("ERROR\nBADGE ERROR");
