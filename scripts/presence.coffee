@@ -36,6 +36,12 @@ module.exports = (robot) ->
         if robot.brain.data.users[user].presence?.accessToken == token
           return user
       return null
+    usersPresent: () ->
+      present = 0
+      for user of robot.brain.data.users
+        if robot.brain.data.users[user].presence?.atSpace
+          present = present + 1
+      return present
   robot.presence = new Presence()
   robot.unifi = new Unifi({
     host: process.env.HUBOT_UNIFI_HOST,
@@ -56,6 +62,7 @@ module.exports = (robot) ->
       else
         console.log "delayed due to timeout"
       robot.brain.data.users[user].presence.lastEntry = data.time
+      robot.brain.data.users[user].presence.atSpace = true
 
   robot.unifi.on 'wu.disconnected', (data) ->
     console.log(this.event, data)
@@ -63,6 +70,7 @@ module.exports = (robot) ->
     console.log(user)
     if robot.brain.data.users[user].presence.enabled
       robot.brain.data.users[user].presence.lastEntry = data.time
+    robot.brain.data.users[user].presence.atSpace = false
 
   robot.respond /setup presence/i, (res) ->
     user = robot.brain.userForName res.envelope.user.name
@@ -92,6 +100,19 @@ module.exports = (robot) ->
     robot.messageRoom "@"+res.envelope.user.name, "Deleting all your presence devices."
     user = robot.brain.userForName res.envelope.user.name
     user.presence.devices = []
+
+  robot.respond /(who is|who's) at the space/i, (res) ->
+    room = robot.adapter.client.rtm.dataStore.getChannelGroupOrDMById res.message.room
+    console.log room
+    console.log res.envelope.user
+    console.log room.user
+    console.log res.envelope.user.id
+    present = robot.presence.usersPresent()
+    response = if present == 1 then 'There is 1 member at the space' else if present == 0 then 'Nobody is at the space' else 'There are '+present+' members at the space.'
+    if room.user == res.envelope.user.id
+      res.send response
+    if room.name == process.env.HUBOT_PRESENCE_ROOM
+      res.send response
 
   getMAC = (ip) ->
     return robot.unifi.get('stat/sta').then (data)->
