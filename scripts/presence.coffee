@@ -6,7 +6,7 @@
 uuid = require('uuid/v4')
 Unifi = require('ubnt-unifi')
 
-presenceNotificationDelay = 2*60*60*1000
+presenceNotificationDelay = 6*60*60*1000
 #presenceNotificationDelay = 60*1000
 
 module.exports = (robot) ->
