@@ -24,6 +24,9 @@ module.exports = (robot) ->
         console.log err
         console.log response
   robot.respond /Change welcome message to (.+) for (\d+) (seconds|minutes|hours)/i, (res) ->
+    if not robot.auth.hasRole msg.message.user, "frontscreen"
+      robot.send "Only frontscreen admins can change the frontscreen"
+      return
     console.log(res.match)
     multiplyer = if res.match[3] == "seconds" then 1 else if res.match[3] == "minutes" then 60 else if res.match[3] == "hours" then 60*60 else 1
     data = JSON.stringify({
@@ -36,6 +39,9 @@ module.exports = (robot) ->
         console.log err
         console.log response
   robot.respond /Clear the welcome message/i, (res) ->
+    if not robot.auth.hasRole msg.message.user, "frontscreen"
+      robot.send "Only frontscreen admins can change the frontscreen"
+      return
     data = JSON.stringify({
       text: "",
       timeout: 0
