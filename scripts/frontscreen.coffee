@@ -1,3 +1,9 @@
+# Description:
+#   Commands to manage the frontscreen
+#
+# Commands:
+#   hubot Change the welcome message to <message> for <time> [seconds|minutes|hours] - Change the welcome message
+#   hubot Clear the welcome message - Clear the welcome message
 
 module.exports = (robot) ->
   robot.hear //i, (res) ->
@@ -23,9 +29,11 @@ module.exports = (robot) ->
       .post(data) (err, response, body) ->
         console.log err
         console.log response
-  robot.respond /Change welcome message to (.+) for (\d+) (seconds|minutes|hours)/i, (res) ->
-    if not robot.auth.hasRole msg.message.user, "frontscreen"
-      robot.send "Only frontscreen admins can change the frontscreen"
+  robot.respond /Change the welcome message to (.+) for (\d+) (seconds|minutes|hours)/i, (res) ->
+    console.log res.message.user.name, "is attemting to change the welcome message"
+    if not robot.auth.hasRole res.message.user, "frontscreen"
+      console.log "user not authorized to change message"
+      res.send "Only frontscreen admins can change the frontscreen"
       return
     console.log(res.match)
     multiplyer = if res.match[3] == "seconds" then 1 else if res.match[3] == "minutes" then 60 else if res.match[3] == "hours" then 60*60 else 1
@@ -38,9 +46,11 @@ module.exports = (robot) ->
       .post(data) (err, response,body) ->
         console.log err
         console.log response
-  robot.respond /Clear the welcome message/i, (res) ->
-    if not robot.auth.hasRole msg.message.user, "frontscreen"
-      robot.send "Only frontscreen admins can change the frontscreen"
+  robot.respond /Clear the [welcome message|frontscreen]/i, (res) ->
+    console.log res.message.user.name, "is attemting to clear the welcome message"
+    if not robot.auth.hasRole res.message.user, "frontscreen"
+      console.log "user not authorized to change message"
+      res.send "Only frontscreen admins can change the frontscreen"
       return
     data = JSON.stringify({
       text: "",
