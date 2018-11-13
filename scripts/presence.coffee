@@ -7,6 +7,7 @@
 #   hubot enable|disable presence - Turn on or off your presence notifications
 uuid = require('uuid/v4')
 Unifi = require('ubnt-unifi')
+cronJob = require('cron').CronJob
 
 presenceNotificationDelay = 6*60*60*1000
 #presenceNotificationDelay = 60*1000
@@ -107,14 +108,26 @@ module.exports = (robot) ->
     room = robot.adapter.client.rtm.dataStore.getChannelGroupOrDMById res.message.room
     console.log room
     console.log res.envelope.user
-    console.log room.user
-    console.log res.envelope.user.id
     present = robot.presence.usersPresent()
     response = if present == 1 then 'There is 1 member at the space' else if present == 0 then 'Nobody is at the space' else 'There are '+present+' members at the space.'
     if room.user == res.envelope.user.id
       res.send response
     if room.name == process.env.HUBOT_PRESENCE_ROOM
       res.send response
+
+  refreshUsers = ->
+    console.log robot.brain.data.users
+    for user of robot.brain.data.users
+      robot.brain.data.users[user].atSpace = false
+    robot.unifi.get('stat/sta').then (data) ->
+      for user of data.data
+        mac = data.data[user].mac
+        user = robot.presence.userWithMAC(mac)
+        if user
+          robot.brain.data.users[user].presence.atSpace = true
+
+  tz = 'America/Chicago'
+  new cronJob('0 */15 * * * *', refreshUsers, null, true, tz)
 
   getMAC = (ip) ->
     return robot.unifi.get('stat/sta').then (data)->
