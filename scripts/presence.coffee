@@ -43,6 +43,7 @@ module.exports = (robot) ->
       present = 0
       for user of robot.brain.data.users
         if robot.brain.data.users[user].presence?.atSpace
+          console.log robot.brain.data.users[user]
           present = present + 1
       return present
   robot.presence = new Presence()
