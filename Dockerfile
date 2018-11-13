@@ -14,14 +14,15 @@ WORKDIR /hubot
 
 RUN yo hubot --owner="Blixa Morgan <blixa@projectmakeit.com>" --name="Makey" --description="The BK-Makerspace Slack Bot" --defaults
 
-COPY package.json package.json
-RUN npm install
-
-ADD scripts /hubot/scripts/
-ADD external-scripts.json /hubot/
-
 EXPOSE 80
 
 ENV REDIS_URL=redis://redis/hubot
 
 ENTRYPOINT ["/bin/sh", "-c", "bin/hubot --adapter slack"]
+
+ADD external-scripts.json /hubot/
+
+COPY package.json package.json
+RUN npm install
+
+ADD scripts /hubot/scripts/

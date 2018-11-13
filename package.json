@@ -6,6 +6,7 @@
   "description": "The BK-Makerspace Slack Bot",
   "dependencies": {
     "@mrmakeit/hubot-cron-auth": "0.0.1",
+    "cron": "^1.5.0",
     "hubot": "^3.1.1",
     "hubot-auth": "^2.1.0",
     "hubot-diagnostics": "^1.0.0",
