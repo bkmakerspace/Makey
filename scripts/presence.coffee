@@ -119,7 +119,8 @@ module.exports = (robot) ->
   refreshUsers = ->
     console.log robot.brain.data.users
     for user of robot.brain.data.users
-      robot.brain.data.users[user].atSpace = false
+      if robot.brain.data.users[user].presence
+        robot.brain.data.users[user].presence.atSpace = false
     robot.unifi.get('stat/sta').then (data) ->
       for user of data.data
         mac = data.data[user].mac
