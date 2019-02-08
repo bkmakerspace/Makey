@@ -62,12 +62,14 @@ module.exports = (robot) ->
         console.log "delayed due to timeout"
       robot.brain.data.users[user].presence.lastEntry = data.time
       robot.brain.data.users[user].presence.atSpace = true
+      robot.emit "memberPresent", user
 
   robot.unifi.on 'wu.disconnected', (data) ->
     user = robot.presence.userWithMAC data.user
     if robot.brain.data.users[user].presence.enabled
       robot.brain.data.users[user].presence.lastEntry = data.time
     robot.brain.data.users[user].presence.atSpace = false
+    robot.emit "memberLeft", user
 
   robot.respond /setup presence/i, (res) ->
     user = robot.brain.userForName res.envelope.user.name
