@@ -73,3 +73,22 @@ module.exports = (robot) ->
       .post(data) (err, response,body) ->
         console.log err
         console.log response
+  robot.on 'memberPresent', (member) ->
+    data = JSON.stringify({
+      member: member
+      present: true
+    })
+    robot.http("http://"+process.env.HUBOT_DISPLAY_ADDRESS+"/welcome")
+      .post(data) (err, response, body) ->
+        console.log err
+        console.log response
+  robot.on 'memberPresent', (member) ->
+    data = JSON.stringify({
+      member: member
+      present: false
+    })
+    robot.http("http://"+process.env.HUBOT_DISPLAY_ADDRESS+"/welcome")
+      .post(data) (err, response, body) ->
+        console.log err
+        console.log response
+
