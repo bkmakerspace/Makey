@@ -112,15 +112,19 @@ module.exports = (robot) ->
       res.send response
 
   refreshUsers = ->
+    robot.emit "memberRefresh", False
     for user of robot.brain.data.users
       if robot.brain.data.users[user].presence
         robot.brain.data.users[user].presence.atSpace = false
+        robot.emit "memberLeft", user
     robot.unifi.get('stat/sta').then (data) ->
       for user of data.data
         mac = data.data[user].mac
         user = robot.presence.userWithMAC(mac)
         if user
           robot.brain.data.users[user].presence.atSpace = true
+          robot.emit "memberPresent", user
+    robot.emit "memberRefreshDone", True
 
   tz = 'America/Chicago'
   new cronJob('0 */15 * * * *', refreshUsers, null, true, tz)
