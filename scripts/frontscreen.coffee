@@ -78,7 +78,7 @@ module.exports = (robot) ->
       member: member
       present: true
     })
-    robot.http("http://"+process.env.HUBOT_DISPLAY_ADDRESS+"/welcome")
+    robot.http("http://"+process.env.HUBOT_DISPLAY_ADDRESS+"/member")
       .post(data) (err, response, body) ->
         console.log err
         console.log response
@@ -87,7 +87,7 @@ module.exports = (robot) ->
       member: member
       present: false
     })
-    robot.http("http://"+process.env.HUBOT_DISPLAY_ADDRESS+"/welcome")
+    robot.http("http://"+process.env.HUBOT_DISPLAY_ADDRESS+"/member")
       .post(data) (err, response, body) ->
         console.log err
         console.log response
