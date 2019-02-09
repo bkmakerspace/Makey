@@ -74,8 +74,9 @@ module.exports = (robot) ->
         console.log err
         console.log response
   robot.on 'memberPresent', (member) ->
+    name = robot.brain.userForId(member).real_name
     data = JSON.stringify({
-      member: member
+      member: name
       present: true
     })
     robot.http("http://"+process.env.HUBOT_DISPLAY_ADDRESS+"/member")
@@ -83,8 +84,9 @@ module.exports = (robot) ->
         console.log err
         console.log response
   robot.on 'memberLeft', (member) ->
+    name = robot.brain.userForId(member).real_name
     data = JSON.stringify({
-      member: member
+      member: name
       present: false
     })
     robot.http("http://"+process.env.HUBOT_DISPLAY_ADDRESS+"/member")
