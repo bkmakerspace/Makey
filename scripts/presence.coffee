@@ -58,6 +58,7 @@ module.exports = (robot) ->
       name = robot.brain.userForId(user).real_name
       if data.time >= robot.brain.data.users[user].presence.lastEntry + presenceNotificationDelay
         robot.messageRoom "#"+process.env.HUBOT_PRESENCE_ROOM, name + " is at the space now!"
+        console.log "user connected"
       else
         console.log "delayed due to timeout"
       robot.brain.data.users[user].presence.lastEntry = data.time
@@ -69,6 +70,7 @@ module.exports = (robot) ->
     if robot.brain.data.users[user].presence.enabled
       robot.brain.data.users[user].presence.lastEntry = data.time
     robot.brain.data.users[user].presence.atSpace = false
+    console.log "user disconnected"
     robot.emit "memberLeft", user
 
   robot.respond /setup presence/i, (res) ->

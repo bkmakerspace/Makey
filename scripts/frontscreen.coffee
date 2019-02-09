@@ -82,7 +82,7 @@ module.exports = (robot) ->
       .post(data) (err, response, body) ->
         console.log err
         console.log response
-  robot.on 'memberPresent', (member) ->
+  robot.on 'memberLeft', (member) ->
     data = JSON.stringify({
       member: member
       present: false
