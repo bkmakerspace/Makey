@@ -112,6 +112,7 @@ module.exports = (robot) ->
       res.send response
 
   refreshUsers = ->
+    console.log "Refreshing Users"
     robot.emit "memberRefresh", False
     for user of robot.brain.data.users
       if robot.brain.data.users[user].presence
