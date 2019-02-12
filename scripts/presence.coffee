@@ -113,7 +113,7 @@ module.exports = (robot) ->
 
   refreshUsers = ->
     console.log "Refreshing Users"
-    robot.emit "memberRefresh", False
+    robot.emit "memberRefresh", false
     for user of robot.brain.data.users
       if robot.brain.data.users[user].presence
         robot.brain.data.users[user].presence.atSpace = false
@@ -125,7 +125,7 @@ module.exports = (robot) ->
         if user
           robot.brain.data.users[user].presence.atSpace = true
           robot.emit "memberPresent", user
-    robot.emit "memberRefreshDone", True
+    robot.emit "memberRefreshDone", true
 
   tz = 'America/Chicago'
   new cronJob('0 */15 * * * *', refreshUsers, null, true, tz, robot, true)
