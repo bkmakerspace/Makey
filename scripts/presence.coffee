@@ -128,7 +128,7 @@ module.exports = (robot) ->
     robot.emit "memberRefreshDone", True
 
   tz = 'America/Chicago'
-  new cronJob('0 */15 * * * *', refreshUsers, null, true, tz)
+  new cronJob('0 */15 * * * *', refreshUsers, null, true, tz, robot, true)
 
   getMAC = (ip) ->
     return robot.unifi.get('stat/sta').then (data)->
