@@ -10,7 +10,6 @@ Unifi = require('ubnt-unifi')
 cronJob = require('cron').CronJob
 
 presenceNotificationDelay = 6*60*60*1000
-#presenceNotificationDelay = 60*1000
 
 module.exports = (robot) ->
   class Presence
@@ -57,7 +56,7 @@ module.exports = (robot) ->
     if robot.brain.data.users[user].presence.enabled
       name = robot.brain.userForId(user).real_name
       if data.time >= robot.brain.data.users[user].presence.lastEntry + presenceNotificationDelay
-        robot.messageRoom "#"+process.env.HUBOT_PRESENCE_ROOM, name + " is at the space now!"
+        robot.messageRoom "#"+process.env.HUBOT_NOTIFICATION_ROOM, name + " is at the space now!"
         console.log "user connected"
       else
         console.log "delayed due to timeout"
@@ -108,7 +107,7 @@ module.exports = (robot) ->
     response = if present == 1 then 'There is 1 member at the space' else if present == 0 then 'Nobody is at the space' else 'There are '+present+' members at the space.'
     if room.user == res.envelope.user.id
       res.send response
-    if room.name == process.env.HUBOT_PRESENCE_ROOM
+    if room.name == process.env.HUBOT_MEMBER_ROOM
       res.send response
 
   refreshUsers = ->
