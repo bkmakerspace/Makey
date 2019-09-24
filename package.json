@@ -21,6 +21,7 @@
     "hubot-scripts": "^2.17.2",
     "hubot-shipit": "^0.2.1",
     "hubot-slack": "^4.5.5",
+    "request": "^2.88.0",
     "ubnt-unifi": "^1.0.0",
     "uuid": "^3.3.2"
   },
